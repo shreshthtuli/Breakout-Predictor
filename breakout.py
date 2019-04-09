@@ -34,6 +34,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 from skimage import io, transform
+from sklearn.metrics import f1_score, confusion_matrix, accuracy_score
 
 np.set_printoptions(threshold=np.inf)
 
@@ -138,7 +139,7 @@ def trainNet(net, data, batch_size, n_epochs, learning_rate):
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
     loss.to(device)
 
-    correct = 0.0; wrong = 0.0
+    pred = []; act = []
         
     for epoch in range(n_epochs):
         print("Epoch "+str(epoch+1))
@@ -159,16 +160,17 @@ def trainNet(net, data, batch_size, n_epochs, learning_rate):
                 optimizer.step()
                 
                 running_loss += loss_size.data.item()
-                
                 # print("running_loss: "+str(running_loss))
                 if epoch == n_epochs - 1:
-                    pred = 1 if outputs >= 0.5 else 0
-                    act = labels[0]
-                    if pred == act: correct += 1
-                    else: wrong += 1
+                    p = 1 if outputs >= 0.5 else 0
+                    pred.append(float(p))
+                    act.append(labels[0].item())
                 running_loss = 0.0
     
-    print(correct, wrong, correct+wrong, correct/(correct+wrong))
+    print("Accuracy : ", accuracy_score(act, pred))
+    print("Macro F1 Score : ", f1_score(act, pred, average='macro'))
+    cm = confusion_matrix(act, pred)
+    print(cm)
 
 data_transform = transforms.Compose([
         Crop(32, 176, 8, 152),
