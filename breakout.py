@@ -113,11 +113,11 @@ class BreakoutDataset(Dataset):
 class ANN(torch.nn.Module):
     
     #Our input shape is (5, 144, 144)
-    def __init__(self):
+    def __init__(self, size):
         super(ANN, self).__init__()
-        self.fc = torch.nn.Linear(5 * 144 * 144, 1000)
+        self.fc = torch.nn.Linear(5 * 144 * 144, size)
         self.sig1 = torch.nn.Sigmoid()
-        self.out = torch.nn.Linear(1000, 1)
+        self.out = torch.nn.Linear(size, 1)
         self.out_act = torch.nn.Sigmoid()
         
     def forward(self, x):
@@ -137,6 +137,8 @@ def trainNet(net, data, batch_size, n_epochs, learning_rate):
     loss = torch.nn.MSELoss()
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
     loss.to(device)
+
+    correct = 0.0; wrong = 0.0
         
     for epoch in range(n_epochs):
         print("Epoch "+str(epoch+1))
@@ -159,7 +161,14 @@ def trainNet(net, data, batch_size, n_epochs, learning_rate):
                 running_loss += loss_size.data.item()
                 
                 # print("running_loss: "+str(running_loss))
+                if epoch == n_epochs - 1:
+                    pred = 1 if outputs >= 0.5 else 0
+                    act = labels[0]
+                    if pred == act: correct += 1
+                    else: wrong += 1
                 running_loss = 0.0
+    
+    print(correct, wrong, correct+wrong, correct/(correct+wrong))
 
 data_transform = transforms.Compose([
         Crop(32, 176, 8, 152),
@@ -180,7 +189,7 @@ print(type(Data.episodes), type(Data.episodes[0]), type(Data.episodes[0][0]), ty
 
 print("Learning NN")
 
-nn = ANN()
+nn = ANN(100)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
