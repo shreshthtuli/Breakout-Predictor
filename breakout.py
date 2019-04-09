@@ -37,6 +37,8 @@ from skimage import io, transform
 
 np.set_printoptions(threshold=np.inf)
 
+torch.set_default_tensor_type('torch.cuda.FloatTensor')
+
 np.random.seed(123)
 torch.manual_seed(123)
 torch.cuda.manual_seed(123)
@@ -95,8 +97,8 @@ class BreakoutDataset(Dataset):
                 image = io.imread(episodePath+frame)
                 image = self.transform(image)
                 x.append(image)
-            print(len(x))
-            self.episodes.append([x,torch.from_numpy(rewards).float()])          
+            print(len(x)); x = torch.cat(x, 0)
+            self.episodes.append([x,torch.from_numpy(rewards).float()])    
 
     def __getitem__(self, idx):
         img_name = os.path.join(self.root_dir, "00000001/"+str(idx).zfill(5)+".png")
@@ -134,16 +136,17 @@ def trainNet(net, data, batch_size, n_epochs, learning_rate):
     train_loader = data.episodes 
     loss = torch.nn.MSELoss()
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
+    loss.to(device)
         
     for epoch in range(n_epochs):
         print("Epoch "+str(epoch+1))
         running_loss = 0.0
         total_train_loss = 0
         for episode in train_loader:
-            # print("Episode length="+str(len(episode[0])))
+            x = Variable(episode[0]); y = Variable(episode[1])
+            x = x.to(device); y = y.to(device)
             for i in range(len(episode[0])-9):
-                inputs, labels = torch.cat(episode[0][i:i+5], 0), episode[1][i+8]
-                inputs, labels = Variable(inputs), Variable(labels)
+                inputs, labels = x[i:i+5,:,:], y[i+8]
                 optimizer.zero_grad()
                 
                 outputs = net(inputs)
@@ -167,7 +170,7 @@ data_transform = transforms.Compose([
     ])
     
 print("Parsing Data")
-Data = BreakoutDataset("", "./train_dataset", data_transform, 2)
+Data = BreakoutDataset("", "./train_dataset", data_transform, 1)
 
 print(len(Data.episodes), len(Data.episodes[0][0]), Data.episodes[0][0][0].shape)
 print(type(Data.episodes), type(Data.episodes[0]), type(Data.episodes[0][0]), type(Data.episodes[0][0][0]))
@@ -181,6 +184,8 @@ nn = ANN()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
-nn.to(device)
+nn.cuda()
 
 trainNet(nn, Data, batch_size=32, n_epochs=5, learning_rate=0.01)
+
+torch.save(nn.state_dict(), "./ann.pt")
