@@ -101,4 +101,5 @@ venv.bak/
 /site
 
 # mypy
+train_dataset
 .mypy_cache/
