@@ -2,9 +2,7 @@
 
 CNN-Color:
 Accuracy :  0.9311206896551724
-Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
+Macro F1 Score :  0.335235173
 20 epochs for 50 data with lr = 0.0001
 20 epochs for 50 data with lr = 0.0001 
 20 epochs for 200 data with lr = 0.000001
@@ -13,10 +11,7 @@ Macro F1 Score :  0.6383632295735254
 #################################################
 
 CompNN:
-Accuracy :  0.9311206896551724
-Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
+Macro F1 Score :  0.39567345126
 10 epochs for 200 data with lr = 0.0001 
 10 epochs for 300 data with lr = 0.0001
 10 epochs for 200 data with lr = 0.000001 
@@ -26,10 +21,7 @@ Macro F1 Score :  0.6383632295735254
 #################################################
 
 CompNN (bigger, without dropout):
-Accuracy :  0.9311206896551724
-Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
+Macro F1 Score :  0.4932456245
 10 epochs for 200-1 data with lr = 0.0001 
 10 epochs for 200-1 data with lr = 0.0001 
 10 epochs for 200-2 data with lr = 0.0001 
@@ -41,10 +33,7 @@ Macro F1 Score :  0.6383632295735254
 #################################################
 
 CompNN (bigger, with 0.4 dropout):
-Accuracy :  0.9311206896551724
-Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
+Macro F1 Score :  0.5624341
 4 epochs for 200-1 data with lr = 0.00001 
 4 epochs for 200-2 data with lr = 0.00001 
 4 epochs for 100-3 data with lr = 0.00001 
@@ -55,10 +44,7 @@ Macro F1 Score :  0.6383632295735254
 #################################################
 
 Resnet34:
-Accuracy :  0.9311206896551724
-Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
+Macro F1 Score :  0.513353
 5 epochs for 100-3 data with lr = 0.0001 
 3 epochs for 200-1 data with lr = 0.0001 
 3 epochs for 200-2 data with lr = 0.00005 
@@ -73,10 +59,7 @@ Macro F1 Score :  0.6383632295735254
 #################################################
 
 Resnet18:
-Accuracy :  0.9311206896551724
 Macro F1 Score :  0.6383632295735254
-[[10619   676]
- [  123   182]]
 4 epochs for 100-3 data with lr = 0.0001 
 4 epochs for 200-1 data with lr = 0.00001 
 4 epochs for 200-2 data with lr = 0.00001 (done)

@@ -571,7 +571,7 @@ elif argv[1] == '12':
     filename = "models/resnet18.pt"
     nn.load_state_dict(torch.load(filename))
     print("Loading test dataset")  
-    Test = load_object("datasets/test.pkl")
+    Test = load_object("datasets/test-small.pkl")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
